@@ -1,0 +1,29 @@
+{
+  "qweather":  {
+    "api_key":  "e65450ad0e2a49378700d601b06ef394",
+    "location_id": "101190101",
+    "comment": "南京的location_id是101190101"
+  },
+  "serverchan": {
+    "sendkey": "SCT305735TEEZa5TVSb7vQZgWuiHr0JTD7"
+  },
+  "settings": {
+    "timezone": "Asia/Shanghai",
+    "execution_window": {
+      "start_hour": 0,
+      "end_hour": 24,
+      "comment": "只在20:00-21:00之间执行"
+    },
+    "data_retention_days": 30,
+    "analysis_days": 7,
+    "retry_times": 3,
+    "retry_interval": 10
+  },
+  "analysis": {
+    "temp_change_threshold": 3,
+    "temp_diff_threshold": 10,
+    "rain_probability_threshold": 60,
+    "cold_warning_temp": 5,
+    "hot_warning_temp": 35
+  }
+}

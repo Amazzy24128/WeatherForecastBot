@@ -1,0 +1,4 @@
+logs/
+__pycache__/
+run_record.json
+weather_data.json

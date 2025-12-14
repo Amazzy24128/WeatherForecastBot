@@ -200,23 +200,55 @@ class WeatherAnalyzer:
             'health': health
         }
     
-    def _get_clothing_suggestion(self, temp_max: float, temp_min: float, apparent_temp: float) -> str:
-        """穿衣建议"""
-        if apparent_temp < 5:
-            return "🧥 羽绒服/厚棉衣 + 毛衣 + 保暖裤"
-        elif apparent_temp < 10:
-            return "🧥 厚外套 + 毛衣/卫衣"
-        elif apparent_temp < 15:
-            return "🧥 夹克/薄外套 + 长袖"
-        elif apparent_temp < 20:
-            return "👔 长袖衬衫/卫衣"
-        elif apparent_temp < 25:
-            return "👕 短袖 + 薄外套（早晚）"
-        elif apparent_temp < 30:
-            return "👕 短袖 + 短裤/裙子"
-        else:
-            return "👕 轻薄透气衣物 + 防晒"
+    def _get_clothing_suggestion(self, temp_max:  float, temp_min: float, apparent_temp: float) -> str:
+        """
+        穿衣建议（以最低温为主，综合考虑温差）
+        """
+        temp_diff = temp_max - temp_min
     
+        # 【核心】根据最低温判断早晚穿衣（这是出门时的温度）
+        if temp_min < -5:
+            morning_clothing = "🧥 厚羽绒服 + 毛衣 + 保暖内衣"
+        elif temp_min < 0:
+            morning_clothing = "🧥 羽绒服/厚棉衣 + 毛衣"
+        elif temp_min < 5:
+            morning_clothing = "🧥 厚外套/大衣 + 毛衣"
+        elif temp_min < 10:
+            morning_clothing = "🧥 夹克/风衣 + 卫衣/毛衣"
+        elif temp_min < 15:
+            morning_clothing = "👔 外套 + 长袖"
+        elif temp_min < 20:
+            morning_clothing = "👕 长袖衬衫/卫衣"
+        elif temp_min < 25:
+            morning_clothing = "👕 短袖 + 薄外套（备用）"
+        else:
+            morning_clothing = "👕 短袖 + 短裤"
+    
+        # 根据温差给出中午建议
+        if temp_diff >= 12:
+            # 温差很大，需要洋葱式穿衣
+            if temp_max >= 20:
+                midday_tip = f"中午可达{temp_max:. 0f}°C，可脱至长袖或短袖"
+            elif temp_max >= 15:
+                midday_tip = f"中午可达{temp_max:.0f}°C，可脱外套"
+            else:
+                midday_tip = f"中午可达{temp_max:. 0f}°C，可适当减少衣物"
+        
+            return f"**早晚**：{morning_clothing}\n**温差提示**：⚠️ 温差{temp_diff:.0f}°C，{midday_tip}，建议洋葱式穿衣"
+    
+        elif temp_diff >= 8:
+            # 温差较大
+            if temp_max >= 20:
+                midday_tip = f"中午{temp_max:.0f}°C较暖，可减少外套"
+            else:
+                midday_tip = f"中午{temp_max:.0f}°C，可适当减衣"
+        
+            return f"{morning_clothing}\n💡 温差{temp_diff:.0f}°C，{midday_tip}"
+    
+        else:
+            # 温差不大，全天穿着一致
+            return morning_clothing      
+   
     def _get_activity_suggestion(self, weather: str, comfort:  str, rain_prob: int) -> str:
         """活动建议"""
         if rain_prob > 70:

@@ -14,6 +14,7 @@ from data_manager import DataManager
 from weather_analyzer import WeatherAnalyzer
 from notifier import ServerChanNotifier
 
+
 # 配置日志
 logging.basicConfig(
     level=logging.INFO,
@@ -31,21 +32,43 @@ class WeatherBot:
         os. makedirs('logs', exist_ok=True)
         
         # 加载配置
-        with open(config_file, 'r', encoding='utf-8') as f:
-            self.config = json.load(f)
+        self.config = self.load_config(config_file)
         
         # 初始化各模块
         self.data_manager = DataManager()
         self.analyzer = WeatherAnalyzer(self.config)
-        self.notifier = ServerChanNotifier(self. config['serverchan']['sendkey'])
+        self.notifier = ServerChanNotifier(self.config['serverchan']['sendkey'])
         
         self.qweather_key = self.config['qweather']['api_key']
-        self.location_id = self.config['qweather']['location_id']
+        self. location_id = self.config['qweather']['location_id']
+    
+    def load_config(self, config_file):
+        """加载配置文件，优先使用环境变量"""
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # 优先使用环境变量中的敏感信息
+        if os.getenv('QWEATHER_API_KEY'):
+            config['qweather']['api_key'] = os.getenv('QWEATHER_API_KEY')
+            logger.info("使用环境变量 QWEATHER_API_KEY")
+        
+        if os.getenv('SERVERCHAN_SENDKEY'):
+            config['serverchan']['sendkey'] = os.getenv('SERVERCHAN_SENDKEY')
+            logger.info("使用环境变量 SERVERCHAN_SENDKEY")
+        
+        # 验证必要的配置
+        if not config['qweather']['api_key'] or config['qweather']['api_key'] == 'YOUR_QWEATHER_API_KEY':
+            raise ValueError("缺少和风天气API Key，请设置环境变量 QWEATHER_API_KEY 或在 config.json 中配置")
+        
+        if not config['serverchan']['sendkey'] or config['serverchan']['sendkey'] == 'YOUR_SERVERCHAN_SENDKEY':
+            raise ValueError("缺少Server酱SendKey，请设置环境变量 SERVERCHAN_SENDKEY 或在 config. json 中配置")
+        
+        return config
     
     def should_run(self) -> tuple:
         """判断是否应该运行"""
         # 检查今天是否已运行
-        if self.data_manager.check_already_run_today():
+        if self. data_manager.check_already_run_today():
             return False, "今天已经运行过"
         
         # 检查时间窗口
@@ -54,7 +77,7 @@ class WeatherBot:
         end_hour = self.config['settings']['execution_window']['end_hour']
         
         if not (start_hour <= now.hour < end_hour):
-            return False, f"当前时间{now.hour}:{now.minute}不在执行窗口({start_hour}: 00-{end_hour}:00)"
+            return False, f"当前时间{now. hour}:{now.minute}不在执行窗口({start_hour}: 00-{end_hour}: 00)"
         
         return True, "可以执行"
     
@@ -62,9 +85,15 @@ class WeatherBot:
         """
         获取天气预报（带重试）
         """
-        url = f"https://ng2mteh6uj.re.qweatherapi.com/v7/weather/3d"
+        # 根据API key判断使用哪个域名
+        # 如果是自定义域名的key，使用自定义域名
+        if 'ng2mteh6uj' in self.qweather_key or len(self.qweather_key) > 32:
+            url = f"https://ng2mteh6uj.re.qweatherapi. com/v7/weather/3d"
+        else:
+            url = f"https://devapi.qweather.com/v7/weather/3d"
+        
         params = {
-            'location': self.location_id,
+            'location':  self.location_id,
             'key': self.qweather_key
         }
         
@@ -74,7 +103,7 @@ class WeatherBot:
                 response = requests.get(url, params=params, timeout=10)
                 data = response.json()
                 
-                if data. get('code') == '200':
+                if data.get('code') == '200':
                     # 返回明天的天气（索引1）
                     tomorrow = data['daily'][1]
                     
@@ -83,17 +112,17 @@ class WeatherBot:
                         'date': tomorrow['fxDate'],
                         'temp_max': int(tomorrow['tempMax']),
                         'temp_min': int(tomorrow['tempMin']),
-                        'weather': tomorrow['textDay'],
+                        'weather':  tomorrow['textDay'],
                         'humidity':  int(tomorrow['humidity']),
-                        'precipitation_probability': float(tomorrow. get('precip', 0)),
-                        'wind_scale':  tomorrow['windScaleDay'],
+                        'precipitation_probability': float(tomorrow.get('precip', 0)),
+                        'wind_scale': tomorrow['windScaleDay'],
                         'wind_dir': tomorrow['windDirDay']
                     }
                     
                     logger.info(f"成功获取天气数据:  {weather_data['date']}")
                     return weather_data
                 else:
-                    logger.error(f"和风天气API返回错误:  {data}")
+                    logger. error(f"和风天气API返回错误: {data}")
                     
             except Exception as e:
                 logger.error(f"获取天气数据失败（第{attempt + 1}次）: {e}")
@@ -107,7 +136,7 @@ class WeatherBot:
         """主执行流程"""
         try:
             logger.info("=" * 50)
-            logger. info("天气机器人启动")
+            logger.info("天气机器人启动")
             logger.info("=" * 50)
             
             # 判断是否应该运行
@@ -123,7 +152,7 @@ class WeatherBot:
             
             # 2. 获取历史数据
             analysis_days = self.config['settings']['analysis_days']
-            historical_data = self.data_manager.get_historical_data(analysis_days)
+            historical_data = self.data_manager. get_historical_data(analysis_days)
             logger.info(f"获取到{len(historical_data)}天历史数据")
             
             # 3. 进行复杂趋势分析
@@ -131,7 +160,7 @@ class WeatherBot:
             analysis = self.analyzer.analyze_weather_trend(tomorrow_weather, historical_data)
             
             # 4. 生成报告
-            report = self.analyzer.format_report(analysis)
+            report = self.analyzer. format_report(analysis)
             logger.info("天气报告生成完成")
             
             # 5. 发送通知
@@ -160,7 +189,7 @@ class WeatherBot:
             logger.error(f"任务执行出错: {e}", exc_info=True)
             
             # 发送错误通知
-            try:
+            try: 
                 self.notifier.send(
                     "天气机器人执行失败",
                     f"执行时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n错误信息:\n```\n{str(e)}\n```"

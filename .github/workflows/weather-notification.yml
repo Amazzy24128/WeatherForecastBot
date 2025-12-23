@@ -1,0 +1,45 @@
+name: Daily Weather Notification
+
+on:
+  schedule: 
+    # 每天北京时间 20:00 执行（UTC 时间 12:00）
+    - cron: '0 12 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  send-weather: 
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name:  Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Create necessary directories
+      run: |
+        mkdir -p logs
+        mkdir -p data
+    
+    - name: Run weather bot
+      env:
+        QWEATHER_API_KEY: ${{ secrets.QWEATHER_API_KEY }}
+        SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
+      run: |
+        python main.py
+    
+    - name: Upload logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: logs
+        path: logs/
+        retention-days: 7

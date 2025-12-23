@@ -1,0 +1,71 @@
+name: Daily Weather Forecast
+
+# 定时任务：每天北京时间晚上8点执行（UTC时间中午12点）
+on:
+  schedule:
+    # Cron表达式：分 时 日 月 周
+    # 每天UTC 12:00运行（北京时间20:00）
+    - cron: '0 12 * * *'
+  
+  # 支持手动触发，方便测试
+  workflow_dispatch:
+
+# 设置时区
+env:
+  TZ: Asia/Shanghai
+
+# 设置权限，允许工作流提交和推送代码
+permissions:
+  contents: write
+
+jobs:
+  run-weather-forecast:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # 2. 设置Python环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # 4. 创建必要的目录
+      - name: Create logs directory
+        run: mkdir -p logs
+      
+      # 5. 运行天气预报程序
+      - name: Run weather forecast bot
+        run: |
+          python main.py
+        env:
+          # 如果需要通过环境变量传递敏感信息，可以使用GitHub Secrets
+          # QWEATHER_API_KEY: ${{ secrets.QWEATHER_API_KEY }}
+          # SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
+      
+      # 6. 提交更新的数据文件（如果有变化）
+      - name: Commit updated data files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          # 只添加存在的数据文件
+          for file in weather_data.json run_record.json; do
+            [ -f "$file" ] && git add "$file" || true
+          done
+          # 只有在有变化时才提交和推送
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto update: Weather data $(date +'%Y-%m-%d %H:%M:%S')"
+            git push
+          else
+            echo "No changes to commit"
+          fi

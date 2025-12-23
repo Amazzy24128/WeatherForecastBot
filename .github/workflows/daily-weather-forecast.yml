@@ -1,11 +1,11 @@
 name: Daily Weather Forecast
 
-# 定时任务：每天北京时间早上8点执行（UTC时间凌晨0点）
+# 定时任务：每天北京时间晚上8点执行（UTC时间中午12点）
 on:
   schedule:
     # Cron表达式：分 时 日 月 周
-    # 每天UTC 00:00运行（北京时间08:00）
-    - cron: '0 0 * * *'
+    # 每天UTC 12:00运行（北京时间20:00）
+    - cron: '0 12 * * *'
   
   # 支持手动触发，方便测试
   workflow_dispatch:
@@ -61,11 +61,10 @@ jobs:
           # 只添加存在的数据文件
           [ -f weather_data.json ] && git add weather_data.json || true
           [ -f run_record.json ] && git add run_record.json || true
-          git diff --staged --quiet || git commit -m "Auto update: Weather data $(date +'%Y-%m-%d %H:%M:%S')"
-      
-      # 7. 推送更改
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          # 只有在有变化时才提交和推送
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto update: Weather data $(date +'%Y-%m-%d %H:%M:%S')"
+            git push
+          else
+            echo "No changes to commit"
+          fi

@@ -88,7 +88,7 @@ class WeatherBot:
         # 根据API key判断使用哪个域名
         # 如果是自定义域名的key，使用自定义域名
         if 'ng2mteh6uj' in self.qweather_key or len(self.qweather_key) > 32:
-            url = f"https://ng2mteh6uj.re.qweatherapi. com/v7/weather/3d"
+            url = f"https://ng2mteh6uj.re.qweatherapi.com/v7/weather/3d"
         else:
             url = f"https://devapi.qweather.com/v7/weather/3d"
         

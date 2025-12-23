@@ -80,7 +80,6 @@ class WeatherBot:
             return False, f"当前时间{now. hour}:{now.minute}不在执行窗口({start_hour}: 00-{end_hour}: 00)"
         
         return True, "可以执行"
-    
     def get_weather_forecast(self, retry_times=3) -> dict:
         """
         获取天气预报（带重试）
@@ -132,7 +131,8 @@ class WeatherBot:
         
         raise Exception("获取天气数据失败，已达最大重试次数")
     
-    def run(self):
+
+        def run(self):
         """主执行流程"""
         try:
             logger.info("=" * 50)

@@ -33,6 +33,7 @@ jobs:
       env:
         QWEATHER_API_KEY: ${{ secrets.QWEATHER_API_KEY }}
         SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
+        QWEATHER_DOMAIN: ${{ secrets.QWEATHER_DOMAIN }}
       run: |
         python main.py
     

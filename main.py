@@ -132,6 +132,7 @@ class WeatherBot:
         raise Exception("获取天气数据失败，已达最大重试次数")
     
 
+
     def run(self):
         """主执行流程"""
         try:

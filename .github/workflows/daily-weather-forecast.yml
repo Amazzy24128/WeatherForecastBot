@@ -1,7 +1,7 @@
 name: Daily Weather Forecast
 
 # 定时任务：每天北京时间晚上8点执行（UTC时间中午12点）
-on:
+"on":
   schedule:
     # Cron表达式：分 时 日 月 周
     # 每天UTC 12:00运行（北京时间20:00）

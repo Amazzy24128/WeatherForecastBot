@@ -1,11 +1,11 @@
 {
   "qweather": {
-    "api_key": "YOUR_QWEATHER_API_KEY",
+    "api_key": "QWEATHER_API_KEY",
     "location_id":  "101190101",
     "comment": "南京的location_id是101190101"
   },
   "serverchan": {
-    "sendkey": "YOUR_SERVERCHAN_SENDKEY"
+    "sendkey": "SERVERCHAN_SENDKEY"
   },
   "settings": {
     "timezone": "Asia/Shanghai",

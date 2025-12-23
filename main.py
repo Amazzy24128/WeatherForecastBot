@@ -84,17 +84,15 @@ class WeatherBot:
         """
         获取天气预报（带重试）
         """
-        # 根据API key判断使用哪个域名
-        # 如果是自定义域名的key，使用自定义域名
-        if 'ng2mteh6uj' in self.qweather_key or len(self.qweather_key) > 32:
-            url = f"https://ng2mteh6uj.re.qweatherapi.com/v7/weather/3d"
-        else:
-            url = f"https://devapi.qweather.com/v7/weather/3d"
+        # 直接使用你的自定义域名
+        url = "https://ng2mteh6uj.re.qweatherapi.com/v7/weather/3d"
         
         params = {
-            'location':  self.location_id,
+            'location': self.location_id,
             'key': self.qweather_key
         }
+        
+        logger.info(f"使用API域名: {url}")
         
         for attempt in range(retry_times):
             try:
@@ -108,26 +106,26 @@ class WeatherBot:
                     
                     # 格式化数据
                     weather_data = {
-                        'date': tomorrow['fxDate'],
+                        'date':  tomorrow['fxDate'],
                         'temp_max': int(tomorrow['tempMax']),
                         'temp_min': int(tomorrow['tempMin']),
-                        'weather':  tomorrow['textDay'],
-                        'humidity':  int(tomorrow['humidity']),
+                        'weather': tomorrow['textDay'],
+                        'humidity': int(tomorrow['humidity']),
                         'precipitation_probability': float(tomorrow.get('precip', 0)),
                         'wind_scale': tomorrow['windScaleDay'],
                         'wind_dir': tomorrow['windDirDay']
                     }
                     
-                    logger.info(f"成功获取天气数据:  {weather_data['date']}")
+                    logger.info(f"成功获取天气数据: {weather_data['date']}")
                     return weather_data
-                else:
-                    logger. error(f"和风天气API返回错误: {data}")
+                else: 
+                    logger.error(f"和风天气API返回错误: {data}")
                     
-            except Exception as e:
+            except Exception as e: 
                 logger.error(f"获取天气数据失败（第{attempt + 1}次）: {e}")
             
             if attempt < retry_times - 1:
-                time.sleep(self.config['settings']['retry_interval'])
+                time. sleep(self.config['settings']['retry_interval'])
         
         raise Exception("获取天气数据失败，已达最大重试次数")
     

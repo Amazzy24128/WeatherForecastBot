@@ -14,6 +14,10 @@ on:
 env:
   TZ: Asia/Shanghai
 
+# 设置权限，允许工作流提交和推送代码
+permissions:
+  contents: write
+
 jobs:
   run-weather-forecast:
     runs-on: ubuntu-latest

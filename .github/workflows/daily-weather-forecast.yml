@@ -59,8 +59,9 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           # 只添加存在的数据文件
-          [ -f weather_data.json ] && git add weather_data.json || true
-          [ -f run_record.json ] && git add run_record.json || true
+          for file in weather_data.json run_record.json; do
+            [ -f "$file" ] && git add "$file" || true
+          done
           # 只有在有变化时才提交和推送
           if ! git diff --staged --quiet; then
             git commit -m "Auto update: Weather data $(date +'%Y-%m-%d %H:%M:%S')"

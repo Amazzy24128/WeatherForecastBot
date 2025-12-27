@@ -232,7 +232,7 @@ class WeatherAnalyzer:
             elif temp_max >= 15:
                 midday_tip = f"中午可达{temp_max:.0f}°C，可脱外套"
             else:
-                midday_tip = f"中午可达{temp_max:. 0f}°C，可适当减少衣物"
+                midday_tip = f"中午可达{temp_max:.0f}°C，可适当减少衣物"
         
             return f"**早晚**：{morning_clothing}\n**温差提示**：⚠️ 温差{temp_diff:.0f}°C，{midday_tip}，建议洋葱式穿衣"
     

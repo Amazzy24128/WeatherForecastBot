@@ -228,7 +228,7 @@ class WeatherAnalyzer:
         if temp_diff >= 12:
             # 温差很大，需要洋葱式穿衣
             if temp_max >= 20:
-                midday_tip = f"中午可达{temp_max:. 0f}°C，可脱至长袖或短袖"
+                midday_tip = f"中午可达{temp_max:.0f}°C，可脱至长袖或短袖"
             elif temp_max >= 15:
                 midday_tip = f"中午可达{temp_max:.0f}°C，可脱外套"
             else:

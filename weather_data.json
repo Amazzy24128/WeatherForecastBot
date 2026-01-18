@@ -1,6 +1,16 @@
 {
   "records": [
     {
+      "date": "2026-01-19",
+      "temp_max": 5,
+      "temp_min": -2,
+      "weather": "小雨",
+      "humidity": 89,
+      "precipitation_probability": 1.0,
+      "wind_scale": "4-5",
+      "wind_dir": "东北风"
+    },
+    {
       "date": "2026-01-18",
       "temp_max": 13,
       "temp_min": 5,

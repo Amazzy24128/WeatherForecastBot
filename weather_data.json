@@ -1,6 +1,16 @@
 {
   "records": [
     {
+      "date": "2026-04-22",
+      "temp_max": 16,
+      "temp_min": 12,
+      "weather": "小雨",
+      "humidity": 94,
+      "precipitation_probability": 5.0,
+      "wind_scale": "1-3",
+      "wind_dir": "北风"
+    },
+    {
       "date": "2026-04-21",
       "temp_max": 17,
       "temp_min": 11,
@@ -309,16 +319,6 @@
       "precipitation_probability": 0.0,
       "wind_scale": "1-3",
       "wind_dir": "西北风"
-    },
-    {
-      "date": "2026-03-21",
-      "temp_max": 16,
-      "temp_min": 8,
-      "weather": "多云",
-      "humidity": 91,
-      "precipitation_probability": 0.0,
-      "wind_scale": "3-4",
-      "wind_dir": "东风"
     }
   ]
 }

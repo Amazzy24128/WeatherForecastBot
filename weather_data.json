@@ -11,6 +11,16 @@
       "wind_dir": "东风"
     },
     {
+      "date": "2026-05-30",
+      "temp_max": 28,
+      "temp_min": 16,
+      "weather": "晴",
+      "humidity": 53,
+      "precipitation_probability": 0.0,
+      "wind_scale": "1-3",
+      "wind_dir": "东风"
+    },
+    {
       "date": "2026-05-28",
       "temp_max": 29,
       "temp_min": 22,
@@ -309,16 +319,6 @@
       "precipitation_probability": 0.2,
       "wind_scale": "1-3",
       "wind_dir": "东风"
-    },
-    {
-      "date": "2026-04-28",
-      "temp_max": 16,
-      "temp_min": 10,
-      "weather": "小雨",
-      "humidity": 86,
-      "precipitation_probability": 4.9,
-      "wind_scale": "1-3",
-      "wind_dir": "东北风"
     }
   ]
 }

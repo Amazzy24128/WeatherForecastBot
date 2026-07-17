@@ -1,6 +1,16 @@
 {
   "records": [
     {
+      "date": "2026-07-18",
+      "temp_max": 31,
+      "temp_min": 25,
+      "weather": "阴",
+      "humidity": 94,
+      "precipitation_probability": 1.6,
+      "wind_scale": "3-4",
+      "wind_dir": "西风"
+    },
+    {
       "date": "2026-07-17",
       "temp_max": 35,
       "temp_min": 28,

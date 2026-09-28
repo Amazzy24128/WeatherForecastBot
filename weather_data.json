@@ -1,6 +1,16 @@
 {
   "records": [
     {
+      "date": "2026-09-30",
+      "temp_max": 24,
+      "temp_min": 18,
+      "weather": "小雨",
+      "humidity": 85,
+      "precipitation_probability": 1.0,
+      "wind_scale": "3-4",
+      "wind_dir": "东北风"
+    },
+    {
       "date": "2026-09-29",
       "temp_max": 24,
       "temp_min": 20,

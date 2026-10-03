@@ -11,6 +11,16 @@
       "wind_dir": "北风"
     },
     {
+      "date": "2026-10-04",
+      "temp_max": 22,
+      "temp_min": 14,
+      "weather": "阴",
+      "humidity": 59,
+      "precipitation_probability": 0.0,
+      "wind_scale": "1-3",
+      "wind_dir": "北风"
+    },
+    {
       "date": "2026-10-03",
       "temp_max": 20,
       "temp_min": 16,
@@ -317,16 +327,6 @@
       "weather": "晴",
       "humidity": 87,
       "precipitation_probability": 0.0,
-      "wind_scale": "3-4",
-      "wind_dir": "东北风"
-    },
-    {
-      "date": "2026-09-02",
-      "temp_max": 29,
-      "temp_min": 23,
-      "weather": "小雨",
-      "humidity": 78,
-      "precipitation_probability": 5.5,
       "wind_scale": "3-4",
       "wind_dir": "东北风"
     }
